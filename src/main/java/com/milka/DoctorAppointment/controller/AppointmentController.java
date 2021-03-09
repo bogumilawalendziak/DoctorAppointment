@@ -1,23 +1,28 @@
 package com.milka.DoctorAppointment.controller;
 
+import com.milka.DoctorAppointment.logic.AppointmentService;
 import com.milka.DoctorAppointment.model.Appointment;
+import com.milka.DoctorAppointment.model.AppointmentDTO;
 import com.milka.DoctorAppointment.model.AppointmentRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
 
     private final AppointmentRepository repository;
+    private final AppointmentService service;
 
-    public AppointmentController(AppointmentRepository repository) {
+    public AppointmentController(AppointmentRepository repository, AppointmentService service) {
         this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping
-    ResponseEntity getAllAppointments() {
+    ResponseEntity<List<Appointment>> getAllAppointments() {
         return ResponseEntity.ok(repository.findAll());
     }
 
@@ -26,9 +31,15 @@ public class AppointmentController {
         return ResponseEntity.ok(repository.findById(id));
     }
 
+
+    @GetMapping("/patient/{id}")
+    ResponseEntity<List<Appointment>> getAllAppointmentByPatientId(@PathVariable int id) {
+        return repository.getAllByPatientPatientId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
-    ResponseEntity saveAppointment(@RequestBody Appointment toSave) {
-        repository.save(toSave);
+    ResponseEntity saveAppointment(@RequestBody AppointmentDTO toSave) {
+        service.createAppointment(toSave);
         return ResponseEntity.noContent().build();
     }
 
@@ -47,7 +58,7 @@ public class AppointmentController {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException();
         }
-        repository.deleteAppointmentById(id);
+        service.deleteAppointment(id);
         return ResponseEntity.noContent().build();
     }
 

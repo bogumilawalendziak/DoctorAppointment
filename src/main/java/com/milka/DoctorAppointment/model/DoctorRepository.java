@@ -15,7 +15,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
 
     List<Doctor> findByFreeIsTrue();
 
-    List<Doctor> findBySpecialization();
+    List<Doctor> findBySpecialization(Specialization specialization);
+    Doctor findFirstBySpecialization(Specialization specialization);
 
     Doctor save(Doctor doctor);
 }

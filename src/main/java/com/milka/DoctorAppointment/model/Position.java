@@ -1,5 +1,5 @@
 package com.milka.DoctorAppointment.model;
 
-public enum Position {
+public enum     Position {
     PATIENT,DOCTOR
 }

@@ -1,28 +1,32 @@
 package com.milka.DoctorAppointment.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "patients")
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    int patientId;
     @Embedded
-    User user;
-    List<Appointment> appointments;
+    User user = new User(Position.PATIENT);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient",fetch = FetchType.LAZY)
+    @JsonManagedReference
+    Set<Appointment> appointments;
 
     public Patient() {
     }
 
-    public int getId() {
-        return id;
+    public int getPatientId() {
+        return patientId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
     public User getUser() {
@@ -33,11 +37,11 @@ public class Patient {
         this.user = user;
     }
 
-    public List<Appointment> getAppointments() {
+    public Set<Appointment> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(List<Appointment> appointments) {
+    public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
 }

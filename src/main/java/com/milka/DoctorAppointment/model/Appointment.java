@@ -1,8 +1,11 @@
 package com.milka.DoctorAppointment.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "appointments")
@@ -11,12 +14,23 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    int patientId;
+    String description;
+    @ManyToOne
+    @JoinColumn(name = "patientId")
+    @JsonBackReference
+    Patient patient;
     int doctorId;
-    Date date;
-    boolean done;
+    LocalDate date;
+    boolean done = false;
 
     public Appointment() {
+    }
+
+    public Appointment(String description, Patient patient, int doctorId, LocalDate date) {
+        this.description = description;
+        this.patient = patient;
+        this.doctorId = doctorId;
+        this.date = date;
     }
 
     public int getId() {
@@ -27,14 +41,6 @@ public class Appointment {
         this.id = id;
     }
 
-    public int getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
-    }
-
     public int getDoctorId() {
         return doctorId;
     }
@@ -43,11 +49,28 @@ public class Appointment {
         this.doctorId = doctorId;
     }
 
-    public Date getDate() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

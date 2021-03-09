@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,23 +12,24 @@ import java.util.Optional;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
-    @Override
-    List<Appointment> findAll();
 
-    @Override
-    Optional<Appointment> findById(Integer integer);
+    List<Appointment> findAll();
 
     Appointment save(Appointment appointment);
 
-    @Override
     void delete(Appointment appointment);
+
+    Appointment findById(int Id);
+
     void deleteAppointmentById(@Param("id") int Id);
 
-    Optional<Appointment> getAllByPatientId(@Param("id") int Id);
+    Optional<List<Appointment>> getAllByPatientPatientId(@Param("id") int id);
 
-    Optional<Doctor> getAllByDoctorId(@Param("id") int Id);
+    Optional<List<Appointment>> getAllByDoctorId(@Param("id") int id);
 
-    List<Appointment> findByDateAAndPatientId(Date date, int Id);
+    Optional<List<Appointment>> getAllByDoctorIdAndDate(int doctorId, LocalDate date);
+
+    List<Appointment> findByDateAndPatientPatientId(Date date, int Id);
 
 
 

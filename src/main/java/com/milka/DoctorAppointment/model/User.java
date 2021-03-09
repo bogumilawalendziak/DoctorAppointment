@@ -7,8 +7,12 @@ public class User {
 
     String name;
     String surname;
-    Position Person;
+    Position position;
 
+
+    public User(Position position) {
+        this.position=position;
+    }
 
     public User() {
     }
@@ -29,11 +33,11 @@ public class User {
         this.surname = surname;
     }
 
-    public Position getPerson() {
-        return Person;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setPerson(Position person) {
-        Person = person;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

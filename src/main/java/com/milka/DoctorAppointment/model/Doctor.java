@@ -1,46 +1,42 @@
 package com.milka.DoctorAppointment.model;
 
 
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "doctors")
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    int doctorId;
     @Embedded
-    User user;
+    User user = new User(Position.DOCTOR);
     Specialization specialization;
-    List<Integer> workHours;
-    boolean isFree;
+    boolean free;
 
     public Doctor() {
     }
 
-    public List<Integer> getWorkHours() {
-        return workHours;
+    public Doctor(Specialization specialization, boolean free) {
+        this.specialization = specialization;
+        this.free = free;
     }
 
-    public void setWorkHours(List<Integer> workHours) {
-        this.workHours = workHours;
+    public int getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
     }
 
     public boolean isFree() {
-        return isFree;
+        return free;
     }
 
     public void setFree(boolean free) {
-        isFree = free;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.free = free;
     }
 
     public User getUser() {
