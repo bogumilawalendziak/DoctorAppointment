@@ -15,7 +15,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findAll();
 
-    Appointment save(Appointment appointment);
+    @Override
+   Appointment save(Appointment entity);
 
     void delete(Appointment appointment);
 
@@ -25,7 +26,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     Optional<List<Appointment>> getAllByPatientPatientId(@Param("id") int id);
 
-    Optional<List<Appointment>> getAllByDoctorId(@Param("id") int id);
 
     Optional<List<Appointment>> getAllByDoctorIdAndDate(int doctorId, LocalDate date);
 

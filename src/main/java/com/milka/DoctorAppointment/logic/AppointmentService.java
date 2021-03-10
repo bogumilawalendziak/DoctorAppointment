@@ -3,7 +3,8 @@ package com.milka.DoctorAppointment.logic;
 import com.milka.DoctorAppointment.model.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -20,32 +21,20 @@ public class AppointmentService {
         this.doctorService = doctorService;
     }
 
-    public void deleteAppointment(int id) {
-        int doctorId = appointmentRepository.findById(id).getDoctorId();
-        LocalDate date = appointmentRepository.findById(id).getDate();
-        appointmentRepository.deleteAppointmentById(id);
-        doctorService.checkIfDoctorIsAvailable(doctorRepository.findById(doctorId)
-                .orElseThrow(IllegalArgumentException::new), date);
+    public Appointment createAppointment(AppointmentDTO toCreate) {
+        Patient patient = patientRepository.findById(toCreate.getPatientId()).orElseThrow(IllegalArgumentException::new);
+        var doctor = getAvailableDoctor(toCreate);
+
+        Appointment appointment = new Appointment(toCreate.getDescription(), patient,
+                doctor.getDoctorId(), toCreate.getDate());
+        return appointmentRepository.save(appointment);
     }
 
-    /**
-     * create appointment from DTO
-     * if doctorIsAvailable return 204
-     * else return 400
-     */
-    public void createAppointment(AppointmentDTO toCreate) {
-        Specialization specialization = toCreate.getSpecialization();
-        Patient patient = patientRepository.findById(toCreate.getPatientId()).orElseThrow(IllegalArgumentException::new);
-        Doctor doctor = doctorRepository.findFirstBySpecialization(specialization);
+    public Doctor getAvailableDoctor(AppointmentDTO toCreate) {
+        List<Doctor> doctors = doctorRepository.findBySpecialization(toCreate.getSpecialization());
+        var filter = doctors.stream().filter(doctor ->
+                doctorService.checkIfDoctorIsAvailable(doctor, toCreate.getDate())).collect(Collectors.toList());
 
-
-        if (doctorService.checkIfDoctorIsAvailable(doctor, toCreate.getDate())) {
-            Appointment appointment = new Appointment(toCreate.getDescription(), patient,
-                    doctor.getDoctorId(), toCreate.getDate());
-            appointmentRepository.save(appointment);
-        } else {
-
-            throw new IllegalArgumentException("Illegal state");
-        }
+        return filter.stream().findFirst().orElseThrow(IllegalArgumentException::new);
     }
 }

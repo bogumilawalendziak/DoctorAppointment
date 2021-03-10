@@ -6,7 +6,6 @@ import com.milka.DoctorAppointment.model.DoctorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,7 +30,6 @@ public class DoctorService {
     int numberOfAppointments(Doctor doctor, LocalDate date) {
        return appointmentRepository.getAllByDoctorIdAndDate(doctor.getDoctorId(), date)
                 .stream().mapToInt(List::size).sum();
-
     }
 
 }
