@@ -38,7 +38,6 @@ public class DoctorController {
 
     @PostMapping
     ResponseEntity<Doctor> addDoctor(@RequestBody Doctor toSave) {
-        toSave.setFree(true);
         repository.save(toSave);
         return ResponseEntity.noContent().build();
     }

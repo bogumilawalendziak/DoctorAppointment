@@ -13,10 +13,10 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int patientId;
     @Embedded
-    User user = new User(Position.PATIENT);
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient",fetch = FetchType.LAZY)
+    private User user = new User(Position.PATIENT);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch = FetchType.LAZY)
     @JsonManagedReference
-    Set<Appointment> appointments;
+    private Set<Appointment> appointments;
 
     public Patient() {
     }

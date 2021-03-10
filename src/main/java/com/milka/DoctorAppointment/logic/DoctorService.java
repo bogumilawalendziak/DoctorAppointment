@@ -28,8 +28,7 @@ public class DoctorService {
     }
 
     int numberOfAppointments(Doctor doctor, LocalDate date) {
-       return appointmentRepository.getAllByDoctorIdAndDate(doctor.getDoctorId(), date)
+        return appointmentRepository.getAllByDoctorIdAndDate(doctor.getDoctorId(), date)
                 .stream().mapToInt(List::size).sum();
     }
-
 }

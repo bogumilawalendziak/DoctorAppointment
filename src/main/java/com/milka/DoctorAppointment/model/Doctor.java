@@ -1,7 +1,6 @@
 package com.milka.DoctorAppointment.model;
 
 
-
 import javax.persistence.*;
 
 @Entity
@@ -11,17 +10,13 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int doctorId;
     @Embedded
-    User user = new User(Position.DOCTOR);
-    Specialization specialization;
-    boolean free;
+    private User user = new User(Position.DOCTOR);
+    private Specialization specialization;
+
 
     public Doctor() {
     }
 
-    public Doctor(Specialization specialization, boolean free) {
-        this.specialization = specialization;
-        this.free = free;
-    }
 
     public int getDoctorId() {
         return doctorId;
@@ -31,13 +26,6 @@ public class Doctor {
         this.doctorId = doctorId;
     }
 
-    public boolean isFree() {
-        return free;
-    }
-
-    public void setFree(boolean free) {
-        this.free = free;
-    }
 
     public User getUser() {
         return user;

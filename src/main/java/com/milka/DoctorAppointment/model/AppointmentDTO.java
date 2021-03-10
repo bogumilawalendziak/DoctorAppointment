@@ -1,12 +1,14 @@
 package com.milka.DoctorAppointment.model;
 
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 
 public class AppointmentDTO {
 
     Specialization specialization;
+    @NotBlank(message = "Description should be not blank")
     String description;
     int patientId;
     LocalDate date;

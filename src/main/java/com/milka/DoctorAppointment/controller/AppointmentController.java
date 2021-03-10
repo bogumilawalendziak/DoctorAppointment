@@ -58,7 +58,7 @@ public class AppointmentController {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException();
         }
-        service.deleteAppointment(id);
+        repository.deleteAppointmentById(id);
         return ResponseEntity.noContent().build();
     }
 

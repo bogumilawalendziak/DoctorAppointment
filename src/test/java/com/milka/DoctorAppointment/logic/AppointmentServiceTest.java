@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,19 +14,18 @@ import static org.mockito.Mockito.*;
 
 class AppointmentServiceTest {
 
+    AppointmentDTO appointmentDTO = new AppointmentDTO(Specialization.NEUROLOGY,
+            "description", 1, LocalDate.now());
 
     @Test
     void createAppointment_if_cant_save_appointments_return_IllegalArgumentException() {
 
         //given
-        AppointmentDTO appointmentDTO = new AppointmentDTO(Specialization.NEUROLOGY,
-                "description", 1, LocalDate.now());
-        //and
-        DoctorService doctorService = new DoctorService(appointmentRepositoryReturningNumberOfAppointments(3),
-               doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(appointmentRepositoryReturningDoctorsAppointments(3),
+                doctorRepositoryReturningDoctor(1));
         //system under test
-        var toTest = new AppointmentService(appointmentRepositoryReturningNumberOfAppointments(3),
-               patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+        var toTest = new AppointmentService(appointmentRepositoryReturningDoctorsAppointments(3),
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
         //when
         var exception = catchThrowable(() -> toTest.createAppointment(appointmentDTO));
         // then
@@ -38,10 +36,7 @@ class AppointmentServiceTest {
     void createAppointment_if_can_save_appointments_returns_appointment() {
 
         //given
-        AppointmentDTO appointmentDTO = new AppointmentDTO(Specialization.NEUROLOGY,
-                "description", 1, LocalDate.now());
-        //and
-        var repository = appointmentRepositoryReturningNumberOfAppointments(0);
+        var repository = appointmentRepositoryReturningDoctorsAppointments(0);
         DoctorService doctorService = new DoctorService(repository,
                 doctorRepositoryReturningDoctor(1));
         //system under test
@@ -55,17 +50,14 @@ class AppointmentServiceTest {
     void getAvailableDoctor_returns_IllegalArgumentException_if_there_are_no_available_doctors() {
 
         //given
-        AppointmentDTO appointmentDTO = new AppointmentDTO(Specialization.NEUROLOGY,
-                "description", 1, LocalDate.now());
-        //and
-        var repository = appointmentRepositoryReturningNumberOfAppointments(3);
+        var repository = appointmentRepositoryReturningDoctorsAppointments(3);
         DoctorService doctorService = new DoctorService(repository,
                 doctorRepositoryReturningDoctor(0));
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(0), doctorService);
         //when
-        var exception = catchThrowable(()->toTest.getAvailableDoctor(appointmentDTO));
+        var exception = catchThrowable(() -> toTest.getAvailableDoctor(appointmentDTO));
         // then
         assertThat(exception).isInstanceOf(IllegalArgumentException.class);
     }
@@ -74,10 +66,7 @@ class AppointmentServiceTest {
     void getAvailableDoctor_returns_Doctor_if_is_available_doctor() {
 
         //given
-        AppointmentDTO appointmentDTO = new AppointmentDTO(Specialization.NEUROLOGY,
-                "description", 1, LocalDate.now());
-        //and
-        var repository = appointmentRepositoryReturningNumberOfAppointments(0);
+        var repository = appointmentRepositoryReturningDoctorsAppointments(0);
         DoctorService doctorService = new DoctorService(repository,
                 doctorRepositoryReturningDoctor(1));
         //system under test
@@ -89,10 +78,40 @@ class AppointmentServiceTest {
         assertThat(doctor).isInstanceOf(Doctor.class);
     }
 
+    @Test
+    void checkIfPatientHasAppointmentsLimit_returns_false_if_patient_has_less_than_3_appointments() {
+
+        //given
+        var repository = appointmentRepositoryReturningPatientAppointments(0);
+        DoctorService doctorService = new DoctorService(repository,
+                doctorRepositoryReturningDoctor(1));
+        //system under test
+        var toTest = new AppointmentService(repository,
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+        //when
+        var result = toTest.checkIfPatientHasAppointmentsLimit(1);
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void checkIfPatientHasAppointmentsLimit_returns_true_if_patient_has_more_than_2_appointments() {
+
+        //given
+        var repository = appointmentRepositoryReturningPatientAppointments(3);
+        DoctorService doctorService = new DoctorService(repository,
+                doctorRepositoryReturningDoctor(1));
+        //system under test
+        var toTest = new AppointmentService(repository,
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+        //when
+        var result = toTest.checkIfPatientHasAppointmentsLimit(1);
+        // then
+        assertThat(result).isTrue();
+    }
+
 
     private PatientRepository patientRepositoryReturningPatient() {
-
-
         var mockPatientRepository = mock(PatientRepository.class);
         when(mockPatientRepository.findById(anyInt())).thenReturn(Optional.of(new Patient()));
         return mockPatientRepository;
@@ -112,7 +131,7 @@ class AppointmentServiceTest {
     }
 
 
-    private AppointmentRepository appointmentRepositoryReturningNumberOfAppointments(int appointments) {
+    private AppointmentRepository appointmentRepositoryReturningDoctorsAppointments(int appointments) {
         List<Appointment> list = new ArrayList<>();
         for (int i = 0; i < appointments; i++) {
             list.add(new Appointment());
@@ -123,6 +142,14 @@ class AppointmentServiceTest {
         return mockAppointmentRepository;
     }
 
-
+    private AppointmentRepository appointmentRepositoryReturningPatientAppointments(int appointments) {
+        List<Appointment> list = new ArrayList<>();
+        for (int i = 0; i < appointments; i++) {
+            list.add(new Appointment());
+        }
+        var mockAppointmentRepository = mock(AppointmentRepository.class, RETURNS_DEEP_STUBS);
+        when(mockAppointmentRepository.findByPatientPatientId(anyInt())).thenReturn(list);
+        return mockAppointmentRepository;
+    }
 
 }

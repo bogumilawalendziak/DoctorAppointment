@@ -29,7 +29,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     Optional<List<Appointment>> getAllByDoctorIdAndDate(int doctorId, LocalDate date);
 
-    List<Appointment> findByDateAndPatientPatientId(Date date, int Id);
+    List<Appointment> findByPatientPatientId(int Id);
 
 
 
