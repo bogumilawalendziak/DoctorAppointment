@@ -61,5 +61,4 @@ public class AppointmentController {
         repository.deleteAppointmentById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

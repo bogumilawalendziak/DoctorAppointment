@@ -21,8 +21,8 @@ class AppointmentServiceTest {
     void createAppointment_if_cant_save_appointments_return_IllegalArgumentException() {
 
         //given
-        DoctorService doctorService = new DoctorService(appointmentRepositoryReturningDoctorsAppointments(3),
-                doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(appointmentRepositoryReturningDoctorsAppointments(3)
+               );
         //system under test
         var toTest = new AppointmentService(appointmentRepositoryReturningDoctorsAppointments(3),
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
@@ -37,8 +37,7 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(0);
-        DoctorService doctorService = new DoctorService(repository,
-                doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
@@ -51,8 +50,7 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(3);
-        DoctorService doctorService = new DoctorService(repository,
-                doctorRepositoryReturningDoctor(0));
+        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(0), doctorService);
@@ -67,8 +65,7 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(0);
-        DoctorService doctorService = new DoctorService(repository,
-                doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
@@ -83,8 +80,7 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningPatientAppointments(0);
-        DoctorService doctorService = new DoctorService(repository,
-                doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
@@ -99,8 +95,7 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningPatientAppointments(3);
-        DoctorService doctorService = new DoctorService(repository,
-                doctorRepositoryReturningDoctor(1));
+        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
                 patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
