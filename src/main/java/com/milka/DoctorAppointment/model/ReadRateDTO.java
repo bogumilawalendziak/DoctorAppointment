@@ -1,23 +1,15 @@
 package com.milka.DoctorAppointment.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
-public class WriteRateDTO {
+public class ReadRateDTO {
 
     String description;
-    int appointmentId;
-    @Min(1)
-    @Max(5)
+    String patientName;
     int rate;
 
-    public WriteRateDTO(String description, int appointmentId, @Min(1) @Max(5) int rate) {
-        this.description = description;
-        this.appointmentId = appointmentId;
-        this.rate = rate;
+
+    public ReadRateDTO(Rating rate) {
+        this.description = rate.getDescription();
+        this.rate = rate.getRate();
     }
 
     public String getDescription() {
@@ -28,12 +20,12 @@ public class WriteRateDTO {
         this.description = description;
     }
 
-    public int getAppointmentId() {
-        return appointmentId;
+    public String getPatientName() {
+        return patientName;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setPatientName(String patientName) {
+        this.patientName = patientName;
     }
 
     public int getRate() {
@@ -43,5 +35,4 @@ public class WriteRateDTO {
     public void setRate(int rate) {
         this.rate = rate;
     }
-
 }

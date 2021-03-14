@@ -13,13 +13,13 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    private final DoctorService doctorService;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository, DoctorService doctorService) {
+
+    public AppointmentService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
         this.appointmentRepository = appointmentRepository;
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
-        this.doctorService = doctorService;
+
     }
 
     public Appointment createAppointment(AppointmentDTO toCreate) {
@@ -39,7 +39,7 @@ public class AppointmentService {
     public Doctor getAvailableDoctor(AppointmentDTO toCreate) {
         List<Doctor> doctors = doctorRepository.findBySpecialization(toCreate.getSpecialization());
         var filter = doctors.stream().filter(doctor ->
-                doctorService.checkIfDoctorIsAvailable(doctor, toCreate.getDate())).collect(Collectors.toList());
+                checkIfDoctorIsAvailable(doctor, toCreate.getDate())).collect(Collectors.toList());
 
         return filter.stream().findFirst().orElseThrow(IllegalArgumentException::new);
     }
@@ -49,5 +49,14 @@ public class AppointmentService {
         return list.size() > 2;
     }
 
+    boolean checkIfDoctorIsAvailable(Doctor doctor, LocalDate date) {
+
+        return !(numberOfAppointments(doctor, date) > 2);
+    }
+
+    int numberOfAppointments(Doctor doctor, LocalDate date) {
+        return appointmentRepository.getAllByDoctorIdAndDate(doctor.getDoctorId(), date)
+                .stream().mapToInt(List::size).sum();
+    }
 
 }

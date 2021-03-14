@@ -20,12 +20,9 @@ class AppointmentServiceTest {
     @Test
     void createAppointment_if_cant_save_appointments_return_IllegalArgumentException() {
 
-        //given
-        DoctorService doctorService = new DoctorService(appointmentRepositoryReturningDoctorsAppointments(3)
-               );
         //system under test
         var toTest = new AppointmentService(appointmentRepositoryReturningDoctorsAppointments(3),
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1));
         //when
         var exception = catchThrowable(() -> toTest.createAppointment(appointmentDTO));
         // then
@@ -37,10 +34,9 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(0);
-        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1));
         //when+then
         assertThat(toTest.createAppointment(appointmentDTO)).isInstanceOf(Appointment.class);
     }
@@ -50,10 +46,9 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(3);
-        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(0), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(0));
         //when
         var exception = catchThrowable(() -> toTest.getAvailableDoctor(appointmentDTO));
         // then
@@ -65,10 +60,9 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningDoctorsAppointments(0);
-        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1));
         //when
         var doctor = toTest.getAvailableDoctor(appointmentDTO);
         // then
@@ -80,10 +74,9 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningPatientAppointments(0);
-        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1));
         //when
         var result = toTest.checkIfPatientHasAppointmentsLimit(1);
         // then
@@ -95,10 +88,9 @@ class AppointmentServiceTest {
 
         //given
         var repository = appointmentRepositoryReturningPatientAppointments(3);
-        DoctorService doctorService = new DoctorService(repository);
         //system under test
         var toTest = new AppointmentService(repository,
-                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1), doctorService);
+                patientRepositoryReturningPatient(), doctorRepositoryReturningDoctor(1));
         //when
         var result = toTest.checkIfPatientHasAppointmentsLimit(1);
         // then
