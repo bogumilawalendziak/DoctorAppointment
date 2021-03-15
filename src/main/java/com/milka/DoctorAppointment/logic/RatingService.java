@@ -3,20 +3,27 @@ package com.milka.DoctorAppointment.logic;
 import com.milka.DoctorAppointment.model.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class RatingService {
 
     AppointmentRepository appointmentRepository;
-    PatientRepository patientRepository;
     DoctorRepository doctorRepository;
+    RatingRepository ratingRepository;
 
-    public RatingService(AppointmentRepository appointmentRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
+
+    public RatingService(AppointmentRepository appointmentRepository,
+                         DoctorRepository doctorRepository, RatingRepository ratingRepository) {
         this.appointmentRepository = appointmentRepository;
-        this.patientRepository = patientRepository;
+
         this.doctorRepository = doctorRepository;
+        this.ratingRepository = ratingRepository;
+
     }
 
-    public void createRate(WriteRateDTO toCreate){
+    public void createRate(WriteRateDTO toCreate) {
 
         int patientId = appointmentRepository.findById(toCreate.getAppointmentId()).getPatient().getPatientId();
         int doctorId = appointmentRepository.findById(toCreate.getAppointmentId()).getDoctorId();
@@ -24,28 +31,48 @@ public class RatingService {
         int rate = toCreate.getRate();
         String description = toCreate.getDescription();
 
-        if(!checkIfAlreadyExistRateForAppointment(toCreate.getAppointmentId()) && checkIfPatientIsAllowedToAddRate(toCreate.getAppointmentId())
-                && checkIfRateIsBetween_1_and_5(rate)){
-            Rating rating = new Rating(description,doctor,patientId,rate);
+        if (!checkIfAlreadyExistRateForAppointment(toCreate.getAppointmentId()) && checkIfPatientIsAllowedToAddRate(toCreate.getAppointmentId())
+                && checkIfRateIsBetween_1_and_5(rate)) {
+            Rating rating = new Rating(description, doctor, patientId, rate);
+            ratingRepository.save(rating);
+            setNewDoctorsRate();
         }
 
     }
 
 
-    public boolean checkIfPatientIsAllowedToAddRate(int appointmentId){
+    public boolean checkIfPatientIsAllowedToAddRate(int appointmentId) {
 
-        return true;
+        if (!appointmentRepository.existsAppointmentByIdAndDoneIsTrue(appointmentId)) {
+            throw new IllegalArgumentException("Wizyta jeszcze się nie odbyła.");
+        } else return true;
     }
 
-    public boolean checkIfAlreadyExistRateForAppointment(int appointmentId){
+    public boolean checkIfAlreadyExistRateForAppointment(int appointmentId) {
 
-        return true;
+        if (ratingRepository.existsByAppointmentId(appointmentId)) {
+            throw new IllegalArgumentException("Istnieje już ocena dla tej wizyty.");
+        } else return false;
     }
 
-    public boolean checkIfRateIsBetween_1_and_5(int rate){
-
-        return true;
+    public boolean checkIfRateIsBetween_1_and_5(int rate) {
+        if (!(rate >= 1 && rate <= 5)) {
+            throw new IllegalArgumentException("Ocena może być z zakresu 1-5.");
+        } else return true;
     }
 
+
+    double calculateRatingAverage(int doctorId) {
+        List<Integer> doctorsRate = doctorRepository.findById(doctorId).map(Doctor::getRating).get()
+                .stream().map(Rating::getRate).collect(Collectors.toList());
+        int quantityOfRates = doctorsRate.size();
+        int sumOfRates = doctorsRate.stream().mapToInt(i -> i).sum();
+        return sumOfRates / quantityOfRates;
+    }
+
+    void setNewDoctorsRate() {
+        List<Doctor> doctors = doctorRepository.findAll();
+        doctors.forEach(doctor -> doctor.setAverageOdRates(calculateRatingAverage(doctor.getDoctorId())));
+    }
 }
 

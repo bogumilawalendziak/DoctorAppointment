@@ -1,6 +1,5 @@
 package com.milka.DoctorAppointment.controller;
 
-import com.milka.DoctorAppointment.logic.DoctorService;
 import com.milka.DoctorAppointment.model.Doctor;
 import com.milka.DoctorAppointment.model.DoctorRepository;
 import com.milka.DoctorAppointment.model.Specialization;
@@ -14,11 +13,9 @@ import java.util.List;
 public class DoctorController {
 
     private final DoctorRepository repository;
-    private final DoctorService service;
 
-    public DoctorController(DoctorRepository repository, DoctorService service) {
+    public DoctorController(DoctorRepository repository) {
         this.repository = repository;
-        this.service = service;
     }
 
     @GetMapping

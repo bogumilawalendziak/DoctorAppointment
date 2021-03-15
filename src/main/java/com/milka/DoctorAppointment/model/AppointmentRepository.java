@@ -31,6 +31,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findByPatientPatientId(int Id);
 
+    boolean existsAppointmentByIdAndDoneIsTrue(int id);
 
 
 

@@ -18,7 +18,7 @@ public class Rating {
     @JoinColumn(name = "doctorId")
     @JsonBackReference
     Doctor doctor;
-    int patientId;
+    int appointmentId;
     @Min(1)
     @Max(5)
     int rate;
@@ -26,10 +26,10 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(String description, Doctor doctor, int patientId, @Min(1) @Max(5) int rate) {
+    public Rating(String description, Doctor doctor, int appointmentId, @Min(1) @Max(5) int rate) {
         this.description = description;
         this.doctor = doctor;
-        this.patientId = patientId;
+        this.appointmentId = appointmentId;
         this.rate = rate;
     }
 
@@ -57,12 +57,12 @@ public class Rating {
         this.doctor = doctor;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public int getAppointmentId() {
+        return appointmentId;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setAppointmentId(int appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
     public int getRate() {

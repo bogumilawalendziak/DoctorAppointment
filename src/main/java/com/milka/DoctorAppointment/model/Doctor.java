@@ -19,11 +19,16 @@ public class Doctor {
     @OneToMany
     @JsonManagedReference
     private Set<Rating> rating = new HashSet<>();
-
+    double averageOdRates;
 
     public Doctor() {
     }
 
+    public Doctor(User user, Specialization specialization, Set<Rating> rating) {
+        this.user = user;
+        this.specialization = specialization;
+        this.rating = rating;
+    }
 
     public int getDoctorId() {
         return doctorId;
@@ -56,5 +61,13 @@ public class Doctor {
 
     public void setRating(Set<Rating> rating) {
         this.rating = rating;
+    }
+
+    public double getAverageOdRates() {
+        return averageOdRates;
+    }
+
+    public void setAverageOdRates(double averageOdRates) {
+        this.averageOdRates = averageOdRates;
     }
 }
