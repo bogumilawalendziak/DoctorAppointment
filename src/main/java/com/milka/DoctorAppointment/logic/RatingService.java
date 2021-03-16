@@ -65,8 +65,8 @@ public class RatingService {
     double calculateRatingAverage(int doctorId) {
         List<Integer> doctorsRate = doctorRepository.findById(doctorId).map(Doctor::getRating).get()
                 .stream().map(Rating::getRate).collect(Collectors.toList());
-        int quantityOfRates = doctorsRate.size();
-        int sumOfRates = doctorsRate.stream().mapToInt(i -> i).sum();
+        double quantityOfRates = doctorsRate.size();
+        double sumOfRates = doctorsRate.stream().mapToInt(i -> i).sum();
         return sumOfRates / quantityOfRates;
     }
 
